@@ -162,21 +162,25 @@ export default function App() {
       // Unlock scroll
       document.body.style.overflow = ''
       if (lenisRef.current) lenisRef.current.start()
-      // Play audio (hidden)
-      if (audioRef.current) {
-        audioRef.current.volume = 0.5
-        audioRef.current.play().catch(() => {})
-      }
     }
   }, [loading])
 
-  // Preload images
+  // Enter handler — called when user clicks "tap to enter"
+  const handleEnter = () => {
+    setLoading(false)
+    // Play audio — allowed because it's triggered by user click
+    if (audioRef.current) {
+      audioRef.current.volume = 0.5
+      audioRef.current.play().catch(() => {})
+    }
+  }
+
+  // Preload first few images in background (don't block)
   useEffect(() => {
-    const promises = scenes.map(s =>
-      new Promise(r => { const img = new Image(); img.onload = img.onerror = r; img.src = s.image })
-    )
-    Promise.all(promises).then(() => setTimeout(() => setLoading(false), 3000))
-    setTimeout(() => setLoading(false), 5000)
+    scenes.slice(0, 3).forEach(s => {
+      const img = new Image()
+      img.src = s.image
+    })
   }, [])
 
   // ScrollTrigger: progress bar + active scene
@@ -226,7 +230,7 @@ export default function App() {
   return (
     <>
       <audio ref={audioRef} src={BASE + 'Audio.mp3'} loop preload="auto" style={{ display: 'none' }} />
-      <LoadingScreen visible={loading} />
+      <LoadingScreen visible={loading} onEnter={handleEnter} />
       <div className="film-grain" />
       <div className="cinema-bars">
         <div className="cinema-bar-top" />

@@ -131,6 +131,26 @@ img {
   100% { width: 100%; }
 }
 
+/* Enter prompt */
+.loading-enter {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.6);
+  animation: enterPulse 1.5s ease-in-out infinite;
+}
+.loading-enter svg {
+  opacity: 0.6;
+}
+@keyframes enterPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
 /* ==========================================
    HERO SECTION
    ========================================== */
