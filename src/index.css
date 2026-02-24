@@ -1,0 +1,756 @@
+/* =============================================
+   FIYAAR — Cinematic Scrollytelling Styles
+   GPU-only animations. No filter in scroll paths.
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&family=Caveat:wght@400;600&display=swap');
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: auto; /* Lenis handles this */
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0a0a0f;
+  color: #e8e6e3;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---------- Film Grain Overlay ---------- */
+.film-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px;
+}
+
+/* ---------- Cinema Bars ---------- */
+.cinema-bars {
+  position: fixed;
+  inset: 0;
+  z-index: 9997;
+  pointer-events: none;
+}
+.cinema-bar-top,
+.cinema-bar-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: #000;
+  height: 4.5vh;
+}
+.cinema-bar-top { top: 0; }
+.cinema-bar-bottom { bottom: 0; }
+
+/* ---------- Progress Bar ---------- */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #ff6b6b);
+  background-size: 300% 100%;
+  animation: progressGradient 6s linear infinite;
+  transform-origin: left center;
+  transform: scaleX(0);
+  z-index: 9999;
+}
+@keyframes progressGradient {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+
+/* ---------- Loading Screen ---------- */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #0a0a0f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+.loading-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.loading-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: #fff;
+  margin-bottom: 0.3em;
+}
+.loading-subtitle {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 2em;
+}
+.loading-bar {
+  width: min(60vw, 240px);
+  height: 2px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 1px;
+  overflow: hidden;
+}
+.loading-bar-fill {
+  height: 100%;
+  background: #fff;
+  border-radius: 1px;
+  animation: loadFill 2.8s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+@keyframes loadFill {
+  0% { width: 0%; }
+  60% { width: 70%; }
+  100% { width: 100%; }
+}
+
+/* ==========================================
+   HERO SECTION
+   ========================================== */
+.hero {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, #1a1028 0%, #0a0a0f 70%);
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  color: #fff;
+  text-shadow: 0 0 60px rgba(255,107,107,0.3), 0 0 120px rgba(255,107,107,0.1);
+  opacity: 0; /* GSAP animates this */
+}
+.hero-tagline {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  color: rgba(255,255,255,0.5);
+  margin-top: 0.5em;
+  opacity: 0;
+}
+.hero-scroll-hint {
+  margin-top: 3em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4em;
+  color: rgba(255,255,255,0.4);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0;
+}
+.hero-scroll-hint svg {
+  opacity: 0.5;
+}
+
+/* ==========================================
+   SCENE SECTIONS
+   ========================================== */
+.scene {
+  position: relative;
+  min-height: 100vh;
+  padding: 10vh 5vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Mood backgrounds — soft gradients, no filter */
+.scene-mood-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  transition: opacity 0.6s ease;
+}
+.mood-lonely-night .scene-mood-bg {
+  background: radial-gradient(ellipse at 30% 60%, #0d1b2a 0%, #0a0a0f 80%);
+}
+.mood-first-meeting .scene-mood-bg {
+  background: radial-gradient(ellipse at 60% 40%, #1a1520 0%, #0a0a0f 80%);
+}
+.mood-classroom-hype .scene-mood-bg {
+  background: radial-gradient(ellipse at 50% 50%, #201318 0%, #0a0a0f 80%);
+}
+.mood-comedy .scene-mood-bg {
+  background: radial-gradient(ellipse at 40% 50%, #1c1a10 0%, #0a0a0f 80%);
+}
+.mood-confluence .scene-mood-bg {
+  background: radial-gradient(ellipse at 55% 45%, #121a1a 0%, #0a0a0f 80%);
+}
+.mood-fiyaar .scene-mood-bg {
+  background: radial-gradient(ellipse at 50% 50%, #1a1020 0%, #0a0a0f 80%);
+}
+.mood-romantic .scene-mood-bg {
+  background: radial-gradient(ellipse at 45% 55%, #1f1020 0%, #0a0a0f 80%);
+}
+.mood-birthday .scene-mood-bg {
+  background: radial-gradient(ellipse at 50% 40%, #1a1520 0%, #0a0a0f 80%);
+}
+
+.scene-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%);
+  pointer-events: none;
+}
+
+/* Scene content layout */
+.scene-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 6rem);
+  max-width: 1200px;
+  width: 100%;
+}
+.scene-content--reverse {
+  flex-direction: row-reverse;
+}
+
+/* Image */
+.scene-image-wrap {
+  flex: 0 0 auto;
+  width: clamp(280px, 40vw, 480px);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+  opacity: 0; /* GSAP controls */
+}
+.scene-image {
+  width: 100%;
+  display: block;
+  border-radius: 12px;
+}
+
+/* Text */
+.scene-text-block {
+  flex: 1;
+  opacity: 0; /* GSAP controls */
+}
+.scene-chapter {
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 0.8em;
+  opacity: 0; /* GSAP controls */
+}
+.scene-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 4vw, 3.2rem);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 0.6em;
+  opacity: 0;
+}
+.scene-body {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  font-weight: 300;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.8;
+  max-width: 480px;
+  margin-bottom: 1.2em;
+  opacity: 0;
+}
+.scene-quote {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  color: rgba(255,255,255,0.45);
+  font-style: italic;
+  opacity: 0;
+}
+
+/* Effects layer */
+.scene-effect-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0; /* GSAP controls */
+}
+
+/* ==========================================
+   SCENE DIVIDER
+   ========================================== */
+.scene-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4vh 0;
+  position: relative;
+}
+.divider-line {
+  width: 60px;
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+}
+.divider-text {
+  color: rgba(255,255,255,0.12);
+  font-size: 1.2rem;
+  padding: 0 1em;
+  letter-spacing: 0.5em;
+}
+
+/* ==========================================
+   SCENE NAV (Right-side dots)
+   ========================================== */
+.scene-counter {
+  position: fixed;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9990;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.scene-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: all 0.4s ease;
+  position: relative;
+}
+.scene-dot::after {
+  content: attr(data-label);
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.scene-dot:hover::after {
+  opacity: 1;
+}
+.scene-dot.active {
+  background: rgba(255,255,255,0.8);
+  border-color: rgba(255,255,255,0.9);
+  transform: scale(1.3);
+  box-shadow: 0 0 12px rgba(255,255,255,0.3);
+}
+
+/* ==========================================
+   EPILOGUE — Birthday Finale
+   ========================================== */
+.epilogue {
+  position: relative;
+  min-height: 120vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.epilogue-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(255,107,107,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(255,217,61,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(180,100,255,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 50%, #1a1028 0%, #0a0a0f 80%);
+}
+.epilogue-content {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2em;
+}
+
+/* Crown */
+.epilogue-crown {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  margin-bottom: 0.2em;
+  opacity: 0;
+}
+
+/* "Happy Birthday" hero text */
+.epilogue-hero-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  line-height: 1;
+}
+.epilogue-happy {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.12em;
+  opacity: 0;
+}
+.epilogue-birthday {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  background: linear-gradient(135deg, #ff9a9e 0%, #ffd89b 25%, #ffc3a0 50%, #f6a5c1 75%, #d4a5ff 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: birthdayGradient 4s ease infinite;
+  text-shadow: none;
+  opacity: 0;
+}
+@keyframes birthdayGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Name */
+.epilogue-name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  font-weight: 700;
+  font-style: italic;
+  color: #fff;
+  text-shadow:
+    0 0 40px rgba(255,160,180,0.4),
+    0 0 80px rgba(255,160,180,0.15);
+  margin-top: 0.1em;
+  opacity: 0;
+}
+
+/* Divider */
+.epilogue-divider {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  margin: 1em 0;
+  transform-origin: center;
+  opacity: 0;
+}
+.epilogue-divider-line {
+  display: block;
+  width: clamp(60px, 15vw, 140px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.25), transparent);
+}
+.epilogue-divider-star {
+  color: rgba(255,200,160,0.5);
+  font-size: 0.7rem;
+}
+
+/* Message */
+.epilogue-message {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+  font-weight: 300;
+  color: rgba(255,255,255,0.55);
+  max-width: 520px;
+  line-height: 1.9;
+  margin: 0.5em 0 1em;
+  opacity: 0;
+}
+
+/* Emoji row */
+.epilogue-emoji-row {
+  display: flex;
+  gap: clamp(0.8em, 2vw, 1.5em);
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  margin: 0.5em 0 1.5em;
+  opacity: 0;
+}
+.epilogue-emoji-row span {
+  animation: emojiFloat 3s ease-in-out infinite;
+}
+.epilogue-emoji-row span:nth-child(1) { animation-delay: 0s; }
+.epilogue-emoji-row span:nth-child(2) { animation-delay: 0.3s; }
+.epilogue-emoji-row span:nth-child(3) { animation-delay: 0.6s; }
+.epilogue-emoji-row span:nth-child(4) { animation-delay: 0.9s; }
+.epilogue-emoji-row span:nth-child(5) { animation-delay: 1.2s; }
+@keyframes emojiFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Tag */
+.epilogue-tag {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(0.9rem, 1.5vw, 1.15rem);
+  color: rgba(255, 255, 255, 0.644);
+  letter-spacing: 0.15em;
+  opacity: 0;
+}
+
+/* Effects layers */
+.epilogue-sparkles,
+.epilogue-confetti {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* Floating light orbs */
+.epilogue-orbs {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+}
+.epilogue-orb {
+  position: absolute;
+  border-radius: 50%;
+  animation: orbFloat linear infinite;
+}
+@keyframes orbFloat {
+  0% { transform: translateY(0) scale(1); opacity: 0.3; }
+  50% { opacity: 0.6; }
+  100% { transform: translateY(-40px) scale(1.15); opacity: 0.3; }
+}
+.epilogue-orb--1 {
+  width: 200px; height: 200px;
+  top: 15%; left: 8%;
+  background: radial-gradient(circle, rgba(255,107,107,0.12), transparent 70%);
+  animation-duration: 7s;
+}
+.epilogue-orb--2 {
+  width: 160px; height: 160px;
+  top: 60%; right: 10%;
+  background: radial-gradient(circle, rgba(255,217,61,0.1), transparent 70%);
+  animation-duration: 8s; animation-delay: 1s;
+}
+.epilogue-orb--3 {
+  width: 120px; height: 120px;
+  top: 30%; right: 20%;
+  background: radial-gradient(circle, rgba(180,140,255,0.1), transparent 70%);
+  animation-duration: 6s; animation-delay: 2s;
+}
+.epilogue-orb--4 {
+  width: 180px; height: 180px;
+  bottom: 20%; left: 15%;
+  background: radial-gradient(circle, rgba(255,180,200,0.1), transparent 70%);
+  animation-duration: 9s; animation-delay: 0.5s;
+}
+.epilogue-orb--5 {
+  width: 100px; height: 100px;
+  top: 10%; left: 45%;
+  background: radial-gradient(circle, rgba(255,200,140,0.1), transparent 70%);
+  animation-duration: 5.5s; animation-delay: 3s;
+}
+.epilogue-orb--6 {
+  width: 140px; height: 140px;
+  bottom: 10%; right: 30%;
+  background: radial-gradient(circle, rgba(255,107,140,0.08), transparent 70%);
+  animation-duration: 7.5s; animation-delay: 1.5s;
+}
+.epilogue-orb--7 {
+  width: 90px; height: 90px;
+  top: 50%; left: 5%;
+  background: radial-gradient(circle, rgba(200,170,255,0.08), transparent 70%);
+  animation-duration: 6.5s; animation-delay: 2.5s;
+}
+.epilogue-orb--8 {
+  width: 110px; height: 110px;
+  top: 75%; left: 55%;
+  background: radial-gradient(circle, rgba(255,220,100,0.07), transparent 70%);
+  animation-duration: 8.5s; animation-delay: 0.8s;
+}
+
+/* ==========================================
+   EFFECTS
+   ========================================== */
+
+/* Rain */
+.rain-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.raindrop {
+  position: absolute;
+  top: -10%;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(174,194,224,0.4));
+  animation: rainfall linear infinite;
+}
+@keyframes rainfall {
+  0% { transform: translateY(-10vh); }
+  100% { transform: translateY(110vh); }
+}
+
+/* Confetti */
+.confetti-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.confetti-piece {
+  position: absolute;
+  top: -5%;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  animation: confettiFall linear infinite;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(-10vh) rotate(0deg); }
+  100% { transform: translateY(110vh) rotate(720deg); }
+}
+
+/* Music notes */
+.music-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.music-note {
+  position: absolute;
+  bottom: -5%;
+  font-size: 1.4rem;
+  animation: musicFloat linear infinite;
+  opacity: 0.35;
+}
+@keyframes musicFloat {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.35; }
+  90% { opacity: 0.35; }
+  100% { transform: translateY(-110vh) rotate(30deg); opacity: 0; }
+}
+
+/* Floating particles */
+.particles-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  animation: particleDrift linear infinite;
+}
+@keyframes particleDrift {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  20% { opacity: 0.3; }
+  80% { opacity: 0.3; }
+  100% { transform: translateY(-60vh) translateX(30px); opacity: 0; }
+}
+
+/* Sparkles */
+.sparkles-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.sparkle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #fff;
+  animation: sparklePulse ease-in-out infinite;
+}
+@keyframes sparklePulse {
+  0%, 100% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 0.8; transform: scale(1.2); }
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+@media (max-width: 768px) {
+  .scene {
+    padding: 8vh 4vw;
+  }
+  .scene-content,
+  .scene-content--reverse {
+    flex-direction: column;
+    text-align: center;
+  }
+  .scene-image-wrap {
+    width: min(85vw, 360px);
+  }
+  .scene-body {
+    max-width: 100%;
+  }
+  .scene-counter {
+    right: 0.8rem;
+    gap: 0.7rem;
+  }
+  .scene-dot {
+    width: 8px;
+    height: 8px;
+  }
+  .cinema-bar-top,
+  .cinema-bar-bottom {
+    height: 3vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    letter-spacing: 0.12em;
+  }
+  .scene-image-wrap {
+    width: 90vw;
+  }
+}
