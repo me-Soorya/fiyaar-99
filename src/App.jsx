@@ -15,6 +15,8 @@ import Sparkles from './components/effects/Sparkles'
 
 gsap.registerPlugin(ScrollTrigger)
 
+const BASE = import.meta.env.BASE_URL
+
 const scenes = [
   {
     id: 1,
@@ -22,7 +24,7 @@ const scenes = [
     title: '99.9% Impossible',
     body: 'Late nights and a glowing screen. Soorya sat in the stillness of his room — the world outside fading behind rain-streaked glass. The phone call which said, "Sorry to say Soorya...99.9% it\'s not possible"',
     quote: '"Some stories begin in silence..."',
-    image: '/scenes/scene1.png',
+    image: BASE + 'scenes/scene1.png',
     mood: 'mood-lonely-night',
     effect: 'rain',
     layout: 'default',
@@ -34,7 +36,7 @@ const scenes = [
     title: 'Bus Bay !',
     body: 'A sea of unfamiliar faces. Soorya, quiet and unsure. Ashly, bright and Positive. And two friends who would witness it all. Soorya Seeking the chance to talk to Ms. Sebu...Sereng noticing everything with the eyes of a hawk...And Ashly, just being her radiant self.',
     quote: '"...before the universe conspires."',
-    image: '/scenes/scene2.png',
+    image: BASE + 'scenes/scene2.png',
     mood: 'mood-first-meeting',
     effect: 'particles',
     layout: 'reverse',
@@ -46,7 +48,7 @@ const scenes = [
     title: 'Soorya..Are You Really Okay??',
     body: 'Soorya...Are You Okay??..The Concern was a lifeline.!!',
     quote: '"Sometimes, it takes just one question to change everything."',
-    image: '/scenes/scenecross.png',
+    image: BASE + 'scenes/scenecross.png',
     mood: 'mood-classroom-hype',
     effect: 'rain',
     layout: 'default',
@@ -58,7 +60,7 @@ const scenes = [
     title: 'The Classroom Erupts',
     body: 'Word travels fast. "SOORYA!!!!" from one corner. "ASHLY! AASHLY AASHLY!" from another. The classroom became a stage they never auditioned for — chaos in their hearts.',
     quote: '"Fame found them with Work."',
-    image: '/scenes/scene3.png',
+    image: BASE + 'scenes/scene3.png',
     mood: 'mood-classroom-hype',
     effect: 'confetti',
     layout: 'reverse',
@@ -70,7 +72,7 @@ const scenes = [
     title: 'The One He Can\'t Stop Talking About',
     body: '"Sebu is just... the best! She\'s so cool, and smart ! !" Soorya rambled on, eyes lit up like fairy lights. Ashly walked beside him, hand on her forehead. "Oh my god... not again."',
     quote: '"Some obsessions are just... inevitable."',
-    image: '/scenes/scene4.png',
+    image: BASE + 'scenes/scene4.png',
     mood: 'mood-comedy',
     effect: 'particles',
     layout: 'default',
@@ -82,7 +84,7 @@ const scenes = [
     title: 'Confluence 2.0',
     body: 'The Academia meet of the year. Balloons, banners, and a hundred things to organize. Ashly Running around ! !.',
     quote: '"Some events are just... unforgettable. but WORK ! !"',
-    image: '/scenes/scene5.png',
+    image: BASE + 'scenes/scene5.png',
     mood: 'mood-confluence',
     effect: 'particles',
     layout: 'reverse',
@@ -94,7 +96,7 @@ const scenes = [
     title: 'Fiyaar🔥',
     body: 'She watched from her screen, phone glowing in the dark. "Fiyaaar!"',
     quote: '"Some moments are just... pure fire??"',
-    image: '/scenes/scene6.png',
+    image: BASE + 'scenes/scene6.png',
     mood: 'mood-fiyaar',
     effect: 'music',
     layout: 'default',
@@ -106,7 +108,7 @@ const scenes = [
     title: 'Kunnimani Cheppu',
     body: 'She said, She couldn\'t...But she can !!',
     quote: '"Kunnimani Cheppu Thurannenni Nokkum Neram..."',
-    image: '/scenes/scene7.png',
+    image: BASE + 'scenes/scene7.png',
     mood: 'mood-romantic',
     effect: 'music',
     layout: 'reverse',
@@ -118,7 +120,7 @@ const scenes = [
     title: 'Happy Birthday, Ashly',
     body: 'Happy Birthday, Ashly! I was looking back at everything we\'ve been through, and I honestly don\'t know how I would\'ve made it without you. From holding me together after Ms. Sebu\'s Rejection to being one among the minions who could make me laugh after getting thrashed and mocked, you\'ve been my absolute rock. Thank you for always being in my corner and cheering the loudest for me. You deserve the world today!',
     quote: '"The best gifts aren\'t wrapped. They\'re felt.(Something i learnt from an important person)..Did you felt??"',
-    image: '/scenes/scene8.png',
+    image: BASE + 'scenes/scene8.png',
     mood: 'mood-birthday',
     effect: 'sparkles',
     layout: 'default',
@@ -223,7 +225,7 @@ export default function App() {
 
   return (
     <>
-      <audio ref={audioRef} src="/Audio.mp3" loop preload="auto" style={{ display: 'none' }} />
+      <audio ref={audioRef} src={BASE + 'Audio.mp3'} loop preload="auto" style={{ display: 'none' }} />
       <LoadingScreen visible={loading} />
       <div className="film-grain" />
       <div className="cinema-bars">
