@@ -125,6 +125,54 @@ const scenes = [
     effect: 'sparkles',
     layout: 'default',
     label: 'Birthday'
+  },
+  {
+    id: 10,
+    chapter: 'Chapter X',
+    title: 'Project Fiyaar-99',
+    body: 'While she expected something simple, he spent nights building something far more personal—a timeline of moments, inside jokes, and shared memories. As the page loaded on her birthday, it wasn’t just a website she saw, but the weight of a friendship carefully remembered and quietly cherished.',
+    quote: '"Some gifts aren’t bought—they’re built, piece by piece."',
+    image: BASE + 'scenes/fiyaar.png',
+    mood: 'mood-romantic',
+    effect: 'particles',
+    layout: 'reverse',
+    label: 'Biju Ser'
+  },
+  {
+    id: 10,
+    chapter: 'Chapter XI',
+    title: 'Right Before the Truth Went Dark (Pookie Biju Ser)',
+    body: 'All Night, he waited on a reply that never came, each failed attempt adding to the pressure. Finally, he called a friend—not for solutions, but to steady himself. Through simple words and calm reassurance, the chaos didn’t vanish, but it became something he could handle.',
+    quote: '"Sometimes you don’t call for answers—you call the one person who helps you think straight."',
+    image: BASE + 'scenes/scene9.png',
+    mood: 'mood-romantic',
+    effect: 'rain',
+    layout: 'default',
+    label: 'Biju Ser'
+  },
+  {
+    id: 11,
+    chapter: 'Chapter XI',
+    title: 'Signing Off',
+    body: 'After countless announcements, last-minute fixes, and shared responsibilities, they stood side by side one final time as class reps. No chaos, no rush—just a quiet sense of completion. What they managed wasn’t just a class, but a phase they’d both carry forward with pride.',
+    quote: '"Some roles end, but the moments we carried through them quietly stay."',
+    image: BASE + 'scenes/scene10.png',
+    mood: 'mood-classroom-hype',
+    effect: 'particles',
+    layout: 'reverse',
+    label: 'The End??'
+  },
+   {
+    id: 12,
+    chapter: 'Chapter XII',
+    title: 'The MEMO. ',
+    body: 'What felt like a final message turned everything heavy for a moment. Words were misread, intentions blurred, and silence grew louder than truth. But instead of letting it end there, they faced it—talked it through—and realized nothing had really broken, just briefly misunderstood.',
+    quote: '"Sometimes the scariest distance is the one created by a misunderstanding."',
+    image: BASE + 'scenes/scene11.png',
+    mood: 'mood-classroom-hype',
+    effect: 'particles',
+    layout: 'default',
+    label: 'The End??'
   }
 ]
 
